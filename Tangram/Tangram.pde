@@ -17,7 +17,7 @@ void setup(){
 }
 
 void reinicio(){
-  String path = "D:\\Proyectos processing\\sketch_170910a\\Niveles\\"; 
+  String path = "C:\\Users\\usuario\\Projects\\UNTANGRAM\\Niveles"; 
   File folder = new File(path);
   File[] listOfFiles = folder.listFiles(); 
   niveles = new ArrayList();
@@ -127,9 +127,19 @@ public class Nivel{
     }
   }
   public boolean validarNivel(){
+    boolean valido;
      for(int i =0; i< this.silueta.size(); i++){
-       if(!this.figuras.get(i).validar())
+       valido = false;
+       for(int j = 0; j< this.silueta.size();j++)
+       {
+         if(this.silueta.get(i).validar(figuras.get(j))){
+           valido = true;
+           break;
+         }
+       }
+       if(!valido){
          return false;
+       }
      }
      return true;
   }
@@ -308,7 +318,7 @@ public class Silueta{
       verticesRetorno.add(new Vertice(this.vertices.get(i).x, this.vertices.get(i).y));
     }
     int rotacionRetorno = int(random(0,8));
-    color colorSiluetaRetorno = color( random(128,254),random(128,254),random(128,254));
+    color colorSiluetaRetorno = color( random(128,204),random(128,204),random(128,204));
     Figura figuraRetorno = this.figura;
     
     return new Silueta(figuraRetorno, verticesRetorno, colorSiluetaRetorno, rotacionRetorno, this.CX, this.CY);
@@ -320,11 +330,8 @@ public class Silueta{
       translate(this.x,this.y);
     if(movible){
       rotate(this.rotacion*radians(45));
-    }
+    }  
     
-    scale(1);   
-    
-    if(true){
     switch(figura){
       case RECTANGULO: // Big ones.
         beginShape(QUADS);
@@ -342,26 +349,6 @@ public class Silueta{
         endShape();
         break;
       } 
-    }
-    /*else{
-    switch(figura){
-      case RECTANGULO: // Big ones.
-        beginShape(QUADS);
-        vertex(vertices.get(0).getX()+CX, vertices.get(0).getY()+CY);
-        vertex(vertices.get(1).getX()+CX, vertices.get(1).getY()+CY);
-        vertex(vertices.get(2).getX()+CX, vertices.get(2).getY()+CY);
-        vertex(vertices.get(3).getX()+CX, vertices.get(3).getY()+CY);
-        endShape();
-        break;
-      case TRIANGULO: // Small ones.
-        beginShape(TRIANGLES);
-        vertex(vertices.get(0).getX()+CX, vertices.get(0).getY()+CY);
-        vertex(vertices.get(1).getX()+CX, vertices.get(1).getY()+CY);
-        vertex(vertices.get(2).getX()+CX, vertices.get(2).getY()+CY);
-        endShape();
-        break;
-      } 
-    }*/
     popMatrix();
   }
   public void localizar(){
@@ -387,27 +374,27 @@ public class Silueta{
        break;
      }
   }
-  public boolean validar(){
+  public boolean validar(Silueta s){
      boolean retorno = false;
      //System.out.print("("+this.x+","+this.y+")"+"("+s.x+","+s.y+")"+"\n");
-     if(x == CX && y == CY/*((this.x > s.x-5 && this.x < s.x+5)&&( this.y > s.y-5 && this.y < s.y-5)) && s.rotacion == 0*/){
+     if(figura == s.figura && s.x+10 > CX && s.x-10 < CX && s.y+10 > CY && s.y-10 < CY/*((this.x > s.x-5 && this.x < s.x+5)&&( this.y > s.y-5 && this.y < s.y-5)) && s.rotacion == 0*/){
        System.out.println("("+this.x+","+this.y+")");
-       //double lon;
-       //double lon2;
-       /*boolean pertenece;
+       /*double lon;
+       double lon2;
+       boolean pertenece;
        int inicial= 0;
        boolean inicio = true;
        for(int i = 0; i< this.vertices.size(); i++){
-         //lon = sqrt( pow((this.vertices.get(i).x - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).x),2)+pow((this.vertices.get(i).y - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).y),2 ));
+         lon = sqrt( pow((this.vertices.get(i).x - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).x),2)+pow((this.vertices.get(i).y - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).y),2 ));
          pertenece = false;
          for(int j = inicial; j< (inicio?this.vertices.size(): inicial+1); j++){
-           //lon2 = sqrt( pow((s.vertices.get(i).x - s.vertices.get( (i+1)== s.vertices.size()? 0: i+1 ).x),2)+pow((this.vertices.get(i).y - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).y),2 ));
-           //if(inicio && lon == lon2){
+           lon2 = sqrt( pow((s.vertices.get(i).x - s.vertices.get( (i+1)== s.vertices.size()? 0: i+1 ).x),2)+pow((this.vertices.get(i).y - this.vertices.get( (i+1)== this.vertices.size()? 0: i+1 ).y),2 ));
+           if(inicio && lon == lon2){
              pertenece = true;
              inicio = false;
              inicial = j+1;
              break;
-           //}
+           }
          }
          if(!pertenece){
            return false;
